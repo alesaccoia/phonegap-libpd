@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+      id="com.keplero.phonegap.phonegap-libpd"
+      version="0.1.0">
+    <name>libPd</name>
+    <description>Interface to libPd, the Pure Data audio engine</description>
+    <author>Ålessandro Saccoia</author>
+    <keywords>audio,puredata</keywords>
+    <license>MIT License</license>
+    
+     <!-- ios -->
+     <platform name="ios">    
+        <config-file target="config.xml" parent="/*">
+           <feature name="libPd">
+               <param name="ios-package" value="libPd" />
+           </feature>
+        </config-file>
+        <asset src="www/pd" target="pd" />
+
+        <js-module src="www/libPd.js" name="libPd">
+          <clobbers target="libPd" />
+        </js-module>
+
+        <header-file src="src/ios/libPd.h" />
+        <source-file src="src/ios/libPd.mm" />
+     </platform>          
+</plugin>
