@@ -90,7 +90,7 @@
 #pragma mark - public plug-in methods
 
 - (void)init:(CDVInvokedUrlCommand*)command {
-  //[self.commandDelegate runInBackground:^{
+  [self.commandDelegate runInBackground:^{
     BOOL retValue = [self setupPd];
     CDVPluginResult* pluginResult = nil;
     if (retValue) {
@@ -100,7 +100,7 @@
       pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-  //}];
+  }];
 }
 
 #pragma mark - pdLib initialization
