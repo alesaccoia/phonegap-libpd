@@ -14,7 +14,7 @@ top-level xcode project "TargetName", add files to "TargetName", select libpd.xc
 
 There are 3 more steps to be done on the target build settings:
 - in the "User Header Search Paths" add the path to yourpath/libpd-master/objc
-- Remove the architecture arm7s from "Valid Architectures"
+- Remove the architecture arm7s from "Valid Architectures" (TODO!)
 - In the Build Phase "link Binary with Libraries" click on add libpd-ios.a
 
 Now it should build. 
@@ -40,6 +40,7 @@ Just remember that init/deinit have to be called just once as they start/stop th
 window.plugins.libPd.deinit();
 
 TODO
+Add the arm7s architecture!!
 Needs a better handling for when the app is put in the background
 For now you can just send bangs and floats: libPd includes many other features, including receiving messages from PD, that I haven't used so far.
 
