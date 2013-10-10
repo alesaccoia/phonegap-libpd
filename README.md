@@ -3,11 +3,13 @@ phonegap-libpd
 
 Cordova-phonegap plug-in for libPd
 
-After adding the plug-in with 
+Dependency: libPd (git@gitorious.org:pdlib/libpd.git)
 
+
+Add the plug-in with 
 phonegap local plugin add https://github.com/alesaccoia/phonegap-libpd
 
-Dependency: libPd (git@gitorious.org:pdlib/libpd.git)
+Open the xcode project in the platforms directory.
 
 Add the Xcode project for libpd (libpd-master/libpd.xcodeproj) by right-clicking on the
 top-level xcode project "TargetName", add files to "TargetName", select libpd.xcodeproj
