@@ -21,6 +21,8 @@
   - (void)openPatch:(CDVInvokedUrlCommand*)command;
   - (void)closePatch:(CDVInvokedUrlCommand*)command;
   
+  - (void)addPath:(CDVInvokedUrlCommand*)command;
+  
   - (void)sendBang:(CDVInvokedUrlCommand*)command;
   - (void)sendFloat:(CDVInvokedUrlCommand*)command;
 

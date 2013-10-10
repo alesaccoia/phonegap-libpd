@@ -126,6 +126,18 @@
   [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
 }
 
+
+- (void)addPath:(CDVInvokedUrlCommand*)command {
+  NSDictionary *args = command.arguments[0];
+  NSString *thePath = [args objectForKey:@"path"];
+  NSString *pathWithWildcard = @"%@";
+  pathWithWildcard = [pathWithWildcard stringByAppendingString:thePath];
+	[PdBase addToSearchPath:[NSString stringWithFormat:pathWithWildcard, [[NSBundle mainBundle] bundlePath]]];
+  [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
+}
+
+// Interaction with the patch
+
 - (void)sendBang:(CDVInvokedUrlCommand*)command {
   NSDictionary *args = command.arguments[0];
   NSString *receiver = [args objectForKey:@"receiver"];
@@ -182,8 +194,6 @@
 	// recieve messages to fromPD: [r fromPD]
 	[PdBase subscribe:@"fromPD"];
 	
-	// add search path
-	[PdBase addToSearchPath:[NSString stringWithFormat:@"%@/www/pd", [[NSBundle mainBundle] bundlePath]]];
 	// enable audio
 	[PdBase computeAudio:YES];
   

@@ -21,16 +21,21 @@ There are 3 more steps to be done on the target build settings:
 
 Now it should build. 
 
-Important: all the abstractions in the directory www/pd will be seen automatically.
-If you want to have a more elaborate directory structure, use the PD commands from inside the patch.
-
-[declare -path ./assets]
+USAGE:
 
 On the event device ready:
+Initialize with
 window.plugins.libPd.init();
+
+To add to the search path use:
+window.plugins.libPd.addPath('/www/pd/');
+in this way all the abstractions in /www/pd will be loaded.
+If you want to have a more elaborate directory structure, use the addPath at will.
+
+Open a patch
 window.plugins.libPd.openPatch('pd/sample.pd');
 
-then you can send messages:
+Now you can send messages:
 window.plugins.libPd.sendBang('toPD');
 window.plugins.libPd.sendFloat(3, 'toPD');
 

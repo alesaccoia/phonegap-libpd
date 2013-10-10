@@ -83,6 +83,21 @@ libPd.prototype.closePatch = function() {
   );
 };
 
+libPd.prototype.addPath = function(path) {
+  var args = {};
+  args.path = path;
+  cordova.exec(
+    function callback(data) {
+    },
+    function errorHandler(err) {
+      alert('Error in libPd');
+    },
+    'libPd',
+    'addPath',
+    [args]
+  );
+};
+
 libPd.prototype.sendBang = function(receiver) {
   var args = {};
   args.receiver = receiver;
