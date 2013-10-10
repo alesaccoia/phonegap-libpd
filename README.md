@@ -19,11 +19,28 @@ There are 3 more steps to be done on the target build settings:
 
 Now it should build. 
 
-Important: place your pure data files in the directory www/pd or use the
+Important: all the abstractions in the directory www/pd will be seen automatically.
+If you want to have a more elaborate directory structure, use the PD commands from inside the patch.
+
+[declare -path ./assets]
 
 On the event device ready:
 window.plugins.libPd.init();
+window.plugins.libPd.openPatch('pd/sample.pd');
 
-For now you can just send bangs and floats. 
-libPd includes many other features, including receiving messages from PD, that I haven't used so far.
+then you can send messages:
+window.plugins.libPd.sendBang('toPD');
+window.plugins.libPd.sendFloat(3, 'toPD');
+
+You can open/close patches at will:
+window.plugins.libPd.openPatch('pd/sample.pd');
+window.plugins.libPd.closePatch();
+
+Just remember that init/deinit have to be called just once as they start/stop the audio
+window.plugins.libPd.deinit();
+
+TODO
+Needs a better handling for when the app is put in the background
+For now you can just send bangs and floats: libPd includes many other features, including receiving messages from PD, that I haven't used so far.
+
 
