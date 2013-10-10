@@ -14,7 +14,6 @@
 @implementation libPdReceiver
 #pragma mark - PdRecieverDelegate
 
-// uncomment this to get print statements from pd
 - (void)receivePrint:(NSString *)message {
 	NSLog(@"%@", message);
 }
@@ -77,7 +76,6 @@
 @property (nonatomic, retain) libPdReceiver *receiver;
 
 - (BOOL)setupPd;
-- (void)testPd;
 
 @end
 
@@ -90,25 +88,79 @@
 #pragma mark - public plug-in methods
 
 - (void)init:(CDVInvokedUrlCommand*)command {
-  [self.commandDelegate runInBackground:^{
+  self.receiver = [[libPdReceiver alloc] init];
+
+  // hmm..
+//  [self.commandDelegate runInBackground:^{
     BOOL retValue = [self setupPd];
     CDVPluginResult* pluginResult = nil;
     if (retValue) {
       pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-      [self testPd];
     } else {
       pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-  }];
+//  }];
+}
+
+- (void)deinit:(CDVInvokedUrlCommand*)command {
+	[PdBase computeAudio:NO];
+  [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
+}
+
+- (void)openPatch:(CDVInvokedUrlCommand*)command {
+  NSString *patchName = [command.arguments objectAtIndex:0];
+	self.patch = [PdFile openFileNamed:patchName path:[NSString stringWithFormat:@"%@/www/", [[NSBundle mainBundle] bundlePath]]];
+	NSLog(@"%@", self.patch);
+  CDVPluginResult* pluginResult = nil;
+  if (self.patch) {
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+  } else {
+    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+  }
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)closePatch:(CDVInvokedUrlCommand*)command {
+  [self.patch closeFile];
+  [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
+}
+
+- (void)sendBang:(CDVInvokedUrlCommand*)command {
+  NSDictionary *args = command.arguments[0];
+  NSString *receiver = [args objectForKey:@"receiver"];
+  [PdBase sendBangToReceiver:receiver];
+  CDVPluginResult* pluginResult = nil;
+  if (receiver != nil) {
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+  } else {
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Arg was null"];
+  }
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
+- (void)sendFloat:(CDVInvokedUrlCommand*)command {
+  NSDictionary *args = command.arguments[0];
+  NSString *receiver = [args objectForKey:@"receiver"];
+  float number = [[args objectForKey:@"num"] floatValue];
+  [PdBase sendFloat:number toReceiver:receiver];
+  
+  CDVPluginResult* pluginResult = nil;
+  if (receiver != nil) {
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+  } else {
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:@"Arg was null"];
+  }
+  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 #pragma mark - pdLib initialization
 
 - (BOOL)setupPd {
   self.audioController = [[PdAudioController alloc] init];
-	PdAudioStatus status = [self.audioController configureAmbientWithSampleRate:44100
+	PdAudioStatus status = [self.audioController configurePlaybackWithSampleRate:44100
 																  numberChannels:2
+                                  inputEnabled:NO
 																   mixingEnabled:YES];
 	if (status == PdAudioError) {
 		NSLog(@"Error! Could not configure PdAudioController");
@@ -127,12 +179,11 @@
 	// set AppDelegate as PdRecieverDelegate to receive messages from pd
   [PdBase setDelegate:self.receiver];
 	[PdBase setMidiDelegate:self.receiver]; // for midi too
-	
 	// recieve messages to fromPD: [r fromPD]
 	[PdBase subscribe:@"fromPD"];
 	
 	// add search path
-	[PdBase addToSearchPath:[NSString stringWithFormat:@"%@/www/pd/abs", [[NSBundle mainBundle] bundlePath]]];
+	[PdBase addToSearchPath:[NSString stringWithFormat:@"%@/www/pd", [[NSBundle mainBundle] bundlePath]]];
 	// enable audio
 	[PdBase computeAudio:YES];
   
@@ -140,9 +191,4 @@
 }
 
 
-- (void)testPd {
-	// open patch
-	self.patch = [PdFile openFileNamed:@"test.pd" path:[NSString stringWithFormat:@"%@/www/pd", [[NSBundle mainBundle] bundlePath]]];
-	NSLog(@"%@", self.patch);
-}
 @end

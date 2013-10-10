@@ -17,8 +17,13 @@ There are 3 more steps to be done on the target build settings:
 - Remove the architecture arm7s from "Valid Architectures"
 - In the Build Phase "link Binary with Libraries" click on add libpd-ios.a
 
-Now it should build. The example pd patch that comes with libpd is also copied in the www/pd folder.
-The search paths for pd are hardcoded in the libPd.mm file, . Change at will.
+Now it should build. 
+
+Important: place your pure data files in the directory www/pd or use the
 
 On the event device ready:
 window.plugins.libPd.init();
+
+For now you can just send bangs and floats. 
+libPd includes many other features, including receiving messages from PD, that I haven't used so far.
+

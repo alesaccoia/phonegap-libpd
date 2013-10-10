@@ -1,6 +1,4 @@
 //
-//  libPd cordova/phonegap plugin
-//
 //  Copyright (c) 2013 Alessandro Saccoia
 //  MIT licensed
 //
@@ -12,7 +10,7 @@ function libPd() {
 }
 
 
-libPd.prototype.init = function(options) {
+libPd.prototype.init = function() {
   cordova.exec(
     // Register the callback handler
     function callback(data) {
@@ -30,6 +28,95 @@ libPd.prototype.init = function(options) {
     [ ]
   );
 };
+libPd.prototype.deinit = function() {
+  cordova.exec(
+    // Register the callback handler
+    function callback(data) {
+       console.log('pdLib deinitialized');
+    },
+    // Register the errorHandler
+    function errorHandler(err) {
+      alert('Error deintializing libPd');
+    },
+    // Define what class to route messages to
+    'libPd',
+    // Execute this method on the above class
+    'deinit',
+    // An array containing one String (our newly created Date String).
+    [ ]
+  );
+};
+
+libPd.prototype.openPatch = function(patchName) {
+  cordova.exec(
+    // Register the callback handler
+    function callback(data) {
+    },
+    // Register the errorHandler
+    function errorHandler(err) {
+      alert('Error in libPd');
+    },
+    // Define what class to route messages to
+    'libPd',
+    // Execute this method on the above class
+    'openPatch',
+    // An array containing one String (our newly created Date String).
+    [patchName]
+  );
+};
+
+libPd.prototype.closePatch = function() {
+  cordova.exec(
+    // Register the callback handler
+    function callback(data) {
+    },
+    // Register the errorHandler
+    function errorHandler(err) {
+      alert('Error in libPd');
+    },
+    // Define what class to route messages to
+    'libPd',
+    // Execute this method on the above class
+    'closePatch',
+    // An array containing one String (our newly created Date String).
+    []
+  );
+};
+
+libPd.prototype.sendBang = function(receiver) {
+  var args = {};
+  args.receiver = receiver;
+  cordova.exec(
+    function callback(data) {
+    },
+    function errorHandler(err) {
+      alert('Error in libPd');
+    },
+    'libPd',
+    'sendBang',
+    [args]
+  );
+};
+
+libPd.prototype.sendFloat = function(num, receiver) {
+  var args = {};
+  args.receiver = receiver;
+  args.num = num;
+
+  cordova.exec(
+    function callback(data) {
+    },
+    function errorHandler(err) {
+      alert('Error in libPd');
+    },
+    'libPd',
+    'sendFloat',
+    [args]
+  );
+};
+
+
+
 
 cordova.addConstructor(function()
 {

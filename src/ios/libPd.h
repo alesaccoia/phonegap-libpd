@@ -1,6 +1,7 @@
 //
 //  libPd.h
-//  HelloWorld
+//  phonegap-libpd
+//  MIT License
 //
 //  Created by Alessandro Saccoia on 10/7/13.
 //
@@ -16,6 +17,12 @@
 
 @interface libPd : CDVPlugin
   - (void)init:(CDVInvokedUrlCommand*)command;
+  - (void)deinit:(CDVInvokedUrlCommand*)command;
+  - (void)openPatch:(CDVInvokedUrlCommand*)command;
+  - (void)closePatch:(CDVInvokedUrlCommand*)command;
+  
+  - (void)sendBang:(CDVInvokedUrlCommand*)command;
+  - (void)sendFloat:(CDVInvokedUrlCommand*)command;
 
   @property (nonatomic, retain) PdFile *patch;
 @end

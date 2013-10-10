@@ -16,8 +16,7 @@
                <param name="ios-package" value="libPd" />
            </feature>
         </config-file>
-        <asset src="www/pd" target="pd" />
-
+        
         <js-module src="www/libPd.js" name="libPd">
           <clobbers target="libPd" />
         </js-module>
