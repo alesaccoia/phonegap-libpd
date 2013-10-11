@@ -90,8 +90,7 @@
 - (void)init:(CDVInvokedUrlCommand*)command {
   self.receiver = [[libPdReceiver alloc] init];
 
-  // hmm..
-//  [self.commandDelegate runInBackground:^{
+  [self.commandDelegate runInBackground:^{
     BOOL retValue = [self setupPd];
     CDVPluginResult* pluginResult = nil;
     if (retValue) {
@@ -100,7 +99,7 @@
       pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
     }
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-//  }];
+  }];
 }
 
 - (void)deinit:(CDVInvokedUrlCommand*)command {
@@ -109,23 +108,24 @@
 }
 
 - (void)openPatch:(CDVInvokedUrlCommand*)command {
-  NSString *patchName = [command.arguments objectAtIndex:0];
-	self.patch = [PdFile openFileNamed:patchName path:[NSString stringWithFormat:@"%@/www/", [[NSBundle mainBundle] bundlePath]]];
-	NSLog(@"%@", self.patch);
-  CDVPluginResult* pluginResult = nil;
-  if (self.patch) {
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-  } else {
-    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
-  }
-  [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  [self.commandDelegate runInBackground:^{
+    NSString *patchName = [command.arguments objectAtIndex:0];
+    self.patch = [PdFile openFileNamed:patchName path:[NSString stringWithFormat:@"%@/www/", [[NSBundle mainBundle] bundlePath]]];
+    NSLog(@"%@", self.patch);
+    CDVPluginResult* pluginResult = nil;
+    if (self.patch) {
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
+    } else {
+      pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR];
+    }
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+  }];
 }
 
 - (void)closePatch:(CDVInvokedUrlCommand*)command {
   [self.patch closeFile];
   [self.commandDelegate sendPluginResult:[CDVPluginResult resultWithStatus:CDVCommandStatus_OK] callbackId:command.callbackId];
 }
-
 
 - (void)addPath:(CDVInvokedUrlCommand*)command {
   NSDictionary *args = command.arguments[0];
